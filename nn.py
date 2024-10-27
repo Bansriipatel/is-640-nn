@@ -29,7 +29,6 @@ class Neuron(Module):
 
 class Layer(Module):
 
-
     def __init__(self, nin, nout, **kwargs):
         self.neurons = [Neuron(nin, **kwargs) for _ in range(nout)]
 

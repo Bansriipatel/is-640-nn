@@ -1,24 +1,29 @@
 from engine import Value
-from nn import Neuron, Layer, MLP
+from nn import MLP
 
-x = Value(2.0)  
-y = Value(1.0)  
+# Sample data (input features and target outputs)
+xs = [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]]  # Input data
+ys = [[0.0], [1.0], [1.0], [0.0]]  # Target outputs
 
-mlp = MLP()  
+# Initialize the MLP with input and output sizes
+nin = 2  # Number of input features
+nouts = [1]  # Output features as a list
+n = MLP(nin=nin, nouts=nouts)
 
-# Optimization loop
-for k in range(100):
+# Training loop
+for k in range(20):
     # Forward pass
-    output = mlp.forward(x)  # Adjust based on your MLP implementation
-    
-    loss = (output - y) ** 2  # Example: Mean Squared Error
+    ypred = [n(x) for x in xs]
+    # Calculate loss as a Value object
+    loss = sum((Value(yout.data) - Value(ygt[0])) ** 2 for ygt, yout in zip(ys, ypred))
 
     # Backward pass
-    loss.backward()
+    for p in n.parameters():
+        p.grad = 0.0
+    loss.backward()  # This should now work
 
-    for p in mlp.parameters():  
-        p.data -= 0.01 * p.grad  
+    # Update weights
+    for p in n.parameters():
+        p.data += -0.1 * p.grad
 
-    # Print progress
     print(k, loss.data)
-
