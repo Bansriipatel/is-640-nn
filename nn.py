@@ -27,7 +27,6 @@ class Neuron(Module):
     def __repr__(self):
         return f"{'ReLU' if self.nonlin else 'Linear'}Neuron({len(self.w)})"
 
-
 class Layer(Module):
 
 
